@@ -157,6 +157,9 @@ HOMEPAGE="https://github.com/AsahiLinux/tiny-dfr"
 SRC_URI="
 	${CARGO_CRATE_URIS}
 "
+PATCHES=(
+	"${FILESDIR}"/"${PN}"-separator.patch
+)
 
 LICENSE="MIT"
 SLOT="0"

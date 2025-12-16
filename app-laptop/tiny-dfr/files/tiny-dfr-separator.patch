@@ -1,0 +1,48 @@
+diff --git a/src/main.rs b/src/main.rs
+index 4d20b23..f58a39d 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -85,6 +85,7 @@ impl BatteryIconMode {
+ }
+ 
+ enum ButtonImage {
++    Separator,
+     Text(String),
+     Svg(Handle),
+     Bitmap(ImageSurface),
+@@ -254,7 +255,15 @@ impl Button {
+                 Button::new_text("Battery N/A".to_string(), cfg.action)
+             }
+         } else {
+-            panic!("Invalid config, a button must have either Text, Icon or Time")
++            Button::new_separator(cfg.action)
++        }
++    }
++    fn new_separator(action: Key) -> Button {
++        Button {
++            action,
++            active: false,
++            changed: false,
++            image: ButtonImage::Separator,
+         }
+     }
+     fn new_text(text: String, action: Key) -> Button {
+@@ -344,6 +353,7 @@ impl Button {
+         y_shift: f64,
+     ) {
+         match &self.image {
++            ButtonImage::Separator => {}
+             ButtonImage::Text(text) => {
+                 let extents = c.text_extents(text).unwrap();
+                 c.move_to(
+@@ -554,7 +564,9 @@ impl FunctionLayer {
+                 + ((end - start - 1) as f64 * (virtual_button_width + BUTTON_SPACING_PX as f64))
+                     .floor();
+ 
+-            let color = if button.active {
++            let color = if let ButtonImage::Separator = button.image {
++                0.0
++            } else if button.active {
+                 BUTTON_COLOR_ACTIVE
+             } else if config.show_button_outlines {
+                 BUTTON_COLOR_INACTIVE
