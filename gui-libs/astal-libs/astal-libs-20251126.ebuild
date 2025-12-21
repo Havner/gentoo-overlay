@@ -26,8 +26,6 @@ S=${WORKDIR}/astal
 ASTAL_DIRS="
 	lib/apps
 	lib/auth
-	lib/auth/include
-	lib/auth/src
 	lib/battery
 	lib/bluetooth
 	lib/cava
@@ -38,15 +36,9 @@ ASTAL_DIRS="
 	lib/notifd
 	lib/powerprofiles
 	lib/river
-	lib/river/include
-	lib/river/protocols/
-	lib/river/src
 	lib/tray
 	lib/wayland-glib
 	lib/wireplumber
-	lib/wireplumber/include
-	lib/wireplumber/include/astal/wireplumber
-	lib/wireplumber/src
 "
 
 # This package has no fetchable sources
