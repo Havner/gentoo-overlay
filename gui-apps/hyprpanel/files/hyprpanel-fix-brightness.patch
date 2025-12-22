@@ -1,0 +1,15 @@
+diff --git a/src/services/system/brightness/index.ts b/src/services/system/brightness/index.ts
+index 1f3faa5..0ca2d1e 100644
+--- a/src/services/system/brightness/index.ts
++++ b/src/services/system/brightness/index.ts
+@@ -2,8 +2,8 @@ import { exec, GObject, monitorFile, property, readFileAsync, register } from 'a
+ import { SystemUtilities } from 'src/core/system/SystemUtilities';
+ 
+ const get = (args: string): number => Number(exec(`brightnessctl ${args}`));
+-const screen = exec('bash -c "ls -w1 /sys/class/backlight | head -1"');
+-const kbd = exec('bash -c "ls -w1 /sys/class/leds | grep \'::kbd_backlight$\' | head -1"');
++const screen = exec('bash -c "ls -w1 /sys/class/backlight | grep -v appletb | head -1"');
++const kbd = exec('bash -c "ls -w1 /sys/class/leds | grep \':kbd_backlight$\' | head -1"');
+ 
+ /**
+  * Service for managing screen and keyboard backlight brightness

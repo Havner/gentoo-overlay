@@ -9,10 +9,16 @@ HOMEPAGE="https://github.com/Jas-SinghFSU/HyprPanel"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="+optional laptop"
 
+# this also includes most of the optional deps
 RDEPEND="
-	gui-apps/aylurs-gtk-shell
 	net-libs/nodejs[npm]
+	gui-apps/aylurs-gtk-shell
+	gui-libs/astal-gjs[gtk3]
+	gui-libs/astal-libs
+	x11-libs/gtksourceview:3.0
+	net-libs/libsoup:3.0
 	media-video/wireplumber
 	gnome-base/libgtop
 	net-wireless/bluez
@@ -20,14 +26,28 @@ RDEPEND="
 	gui-apps/wl-clipboard
 	sys-power/upower
 	gnome-base/gvfs
-	media-fonts/nerdfonts[jetbrainsmono]
+	dev-lang/dart-sass
+	optional? (
+		gui-wm/hyprland-contrib
+		gui-apps/wf-recorder
+		gui-apps/hyprpicker
+		gui-apps/hyprsunset
+		sys-process/btop
+		x11-misc/matugen
+		gui-apps/swww
+	)
+	laptop? (
+		app-misc/brightnessctl
+		sys-power/power-profiles-daemon
+	)
 "
 DEPEND="${RDEPEND}"
-# it also needs sass binary (dart-sass)
-# npm install -g sass
 
 PATCHES=(
 	"${FILESDIR}"/"${PN}"-fix-terminal-option.patch
+	"${FILESDIR}"/"${PN}"-fix-brightness.patch
+	"${FILESDIR}"/"${PN}"-shorter-bluetooth.patch
+	"${FILESDIR}"/"${PN}"-bluetooth-connect-by-name.patch
 )
 
 S="${WORKDIR}/HyprPanel"
