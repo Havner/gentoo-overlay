@@ -11,9 +11,9 @@ KEYWORDS="~amd64"
 SRC_URI="https://github.com/Aylur/ags/releases/download/v${PV}/ags-v${PV}.tar.gz -> ${P}.tar.gz"
 
 RDEPEND="
-	gui-libs/astal
-	net-libs/nodejs[npm]
 	dev-lang/go
+	gui-libs/gtk4-layer-shell
+	dev-libs/gjs
 "
 DEPEND="${RDEPEND}"
 
