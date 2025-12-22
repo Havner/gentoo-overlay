@@ -9,21 +9,26 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 RDEPEND="
-	gui-libs/astal
+	dev-lang/vala[valadoc]
+	dev-libs/glib:2
 	dev-libs/json-glib
+	dev-libs/gobject-introspection
+	x11-libs/gdk-pixbuf:2
 	sys-libs/pam
+	media-sound/libcava
 	gnome-base/gvfs
 	net-misc/networkmanager[vala]
-	x11-libs/gdk-pixbuf:2
-	media-sound/libcava
-	media-video/wireplumber
+	dev-libs/wayland
 	gui-libs/appmenu-glib-translator
+	media-video/wireplumber
 "
 DEPEND="${RDEPEND}"
 
+	# =gui-libs/astal-${PV}
+
 S=${WORKDIR}/astal
 
-ASTAL_DIRS="
+ASTAL_LIBS="
 	lib/apps
 	lib/auth
 	lib/battery
@@ -41,41 +46,40 @@ ASTAL_DIRS="
 	lib/wireplumber
 "
 
-# This package has no fetchable sources
 src_unpack() {
 	tar xf "${FILESDIR}/astal-${PV}.tar.gz"
 }
 
 src_configure() {
-	# why is it needed? shouldn't vala eclass define by itlself?
+	# why is it needed? shouldn't vala eclass define those by itself?
 	export VALAC="$(type -P valac-$(vala_best_api_version))"
 	export VALADOC="$(type -P valadoc-$(vala_best_api_version))"
 	export VAPIGEN="$(type -P vapigen-$(vala_best_api_version))"
 
-	for dir in $ASTAL_DIRS; do
+	for lib in $ASTAL_LIBS; do
 		(
-			EMESON_SOURCE=${S}/$dir
-			BUILD_DIR="${WORKDIR}"/$(basename "${dir}")_build
+			EMESON_SOURCE=${S}/$lib
+			BUILD_DIR="${WORKDIR}"/$(basename "${lib}")_build
 			meson_src_configure
 		)
 	done
 }
 
 src_compile() {
-	for dir in $ASTAL_DIRS; do
+	for lib in $ASTAL_LIBS; do
 		(
-			EMESON_SOURCE=${S}/$dir
-			BUILD_DIR="${WORKDIR}"/$(basename "${dir}")_build
+			EMESON_SOURCE=${S}/$lib
+			BUILD_DIR="${WORKDIR}"/$(basename "${lib}")_build
 			meson_src_compile
 		)
 	done
 }
 
 src_install() {
-	for dir in $ASTAL_DIRS; do
+	for lib in $ASTAL_LIBS; do
 		(
 			EMESON_SOURCE=${S}/$DIR
-			BUILD_DIR="${WORKDIR}"/$(basename "${dir}")_build
+			BUILD_DIR="${WORKDIR}"/$(basename "${lib}")_build
 			meson_src_install
 		)
 	done
