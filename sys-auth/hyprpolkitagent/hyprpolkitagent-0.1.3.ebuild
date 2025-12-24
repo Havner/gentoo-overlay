@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake
 
 DESCRIPTION="Polkit authentication agent for Hyprland, written in Qt/QML"
-HOMEPAGE="https://wiki.hypr.land/Hypr-Ecosystem/hyprpolkitagent"
+HOMEPAGE="https://github.com/hyprwm/hyprpolkitagent"
 SRC_URI="https://github.com/hyprwm/${PN}/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"

@@ -35,6 +35,7 @@ RDEPEND="
 		sys-process/btop
 		x11-misc/matugen
 		gui-apps/swww
+		media-fonts/nerdfonts[jetbrainsmono]
 	)
 	laptop? (
 		app-misc/brightnessctl
