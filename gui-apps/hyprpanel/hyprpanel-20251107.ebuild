@@ -49,6 +49,7 @@ PATCHES=(
 	"${FILESDIR}"/"${PN}"-fix-brightness.patch
 	"${FILESDIR}"/"${PN}"-shorter-bluetooth.patch
 	"${FILESDIR}"/"${PN}"-bluetooth-connect-by-name.patch
+	"${FILESDIR}"/"${PN}"-refactor-wifi-management-to-use-NetworkManager-D-Bus.patch
 )
 
 S="${WORKDIR}/HyprPanel"
