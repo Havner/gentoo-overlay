@@ -10,6 +10,8 @@ wrong/incomplete and those ebuilds probably don't follow the rules
 properly. This is simply my own private playground, not an overlay to be used by
 others. You have been warned.
 
+This overlay needs to be coupled with [GURU] for some dependencies.
+
 # Highlights
 
 This overlay contains latest [hyprland] with most of its dependencies. If some
