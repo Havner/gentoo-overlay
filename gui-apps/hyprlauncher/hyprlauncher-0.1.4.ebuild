@@ -7,6 +7,7 @@ inherit cmake
 
 DESCRIPTION="A multipurpose and versatile launcher / picker for Hyprland"
 HOMEPAGE="https://github.com/hyprwm/hyprlauncher"
+SRC_URI="https://github.com/hyprwm/${PN^}/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -29,9 +30,3 @@ DEPEND="${RDEPEND}"
 BDEPEND="
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}"/"${PN}"
-
-src_unpack() {
-	unpack "${FILESDIR}"/${P}.tar.gz
-}
