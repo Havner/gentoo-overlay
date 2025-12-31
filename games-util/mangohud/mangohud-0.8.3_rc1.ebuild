@@ -74,10 +74,6 @@ DEPEND="
 	x11-libs/libxkbcommon:=[${MULTILIB_USEDEP}]
 	dbus? ( sys-apps/dbus[${MULTILIB_USEDEP}] )
 	X? ( x11-libs/libX11[${MULTILIB_USEDEP}] )
-	video_cards_nvidia? (
-		x11-drivers/nvidia-drivers[${MULTILIB_USEDEP}]
-		xnvctrl? ( x11-drivers/nvidia-drivers[static-libs] )
-	)
 	wayland? ( dev-libs/wayland[${MULTILIB_USEDEP}] )
 	mangoapp? (
 		media-libs/glfw[X(+)?,wayland(+)?]
@@ -146,6 +142,16 @@ multilib_src_configure() {
 }
 
 pkg_postinst() {
+	if use video_cards_nvidia; then
+		einfo ""
+		einfo "You need nvidia-drivers[multilib?] if running on an NVidia hardware."
+		einfo ""
+	fi
+	if use xnvctrl; then
+		einfo ""
+		einfo "You need nvidia-drivers[static-libs] if running on an NVidia hardware."
+		einfo ""
+	fi
 	if ! use xnvctrl; then
 		einfo ""
 		einfo "If mangohud can't get GPU load, or other GPU information,"
