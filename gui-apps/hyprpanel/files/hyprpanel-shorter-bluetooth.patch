@@ -1,0 +1,13 @@
+diff --git a/src/components/bar/modules/bluetooth/index.tsx b/src/components/bar/modules/bluetooth/index.tsx
+index 0ef28af..0cea49d 100644
+--- a/src/components/bar/modules/bluetooth/index.tsx
++++ b/src/components/bar/modules/bluetooth/index.tsx
+@@ -22,7 +22,7 @@ const Bluetooth = (): BarBoxChild => {
+ 
+         const label =
+             isPowered && connectDevices.length
+-                ? ` Connected (${connectDevices.length})`
++                ? ` Con (${connectDevices.length})`
+                 : isPowered
+                   ? 'On'
+                   : 'Off';

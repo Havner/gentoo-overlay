@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# This script drives the standalone dart-sass package, which bundles together a
+# Dart executable and a snapshot of dart-sass.
+
+exec /usr/libexec/dart-sass/dart /usr/libexec/dart-sass/sass.snapshot "$@"

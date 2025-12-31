@@ -1,0 +1,386 @@
+diff --git a/src/modules/bar/items/keyboard.tsx b/src/modules/bar/items/keyboard.tsx
+index 41d81a9..5b10e8a 100644
+--- a/src/modules/bar/items/keyboard.tsx
++++ b/src/modules/bar/items/keyboard.tsx
+@@ -1,5 +1,4 @@
+ import { compositor } from "@/options";
+-import { KeyboardNiri } from "./keyboard/niri";
+ import { KeyboardHypr } from "./keyboard/hypr";
+ import { With } from "ags";
+ 
+@@ -8,7 +7,6 @@ export function Keyboard() {
+       <box>
+          <With value={compositor}>
+             {(comp) => {
+-               if (comp === "niri") return <KeyboardNiri />;
+                if (comp === "hyprland") return <KeyboardHypr />;
+                console.warn(
+                   `Bar: keyboard module skipped: compositor ${compositor} not supported`,
+diff --git a/src/modules/bar/items/keyboard/niri.tsx b/src/modules/bar/items/keyboard/niri.tsx
+deleted file mode 100644
+index c95ffc9..0000000
+--- a/src/modules/bar/items/keyboard/niri.tsx
++++ /dev/null
+@@ -1,65 +0,0 @@
+-import AstalNiri from "gi://AstalNiri";
+-import { bash } from "@/src/lib/utils";
+-import { createBinding, createState, onCleanup } from "ags";
+-import { compositor, config } from "@/options";
+-import BarItem from "@/src/widgets/baritem";
+-import { isVertical } from "../../bar";
+-import { icons } from "@/src/lib/icons";
+-const niri = compositor.peek() === "niri" ? AstalNiri.get_default() : null;
+-
+-const [layout_name, layout_name_set] = createState("?");
+-
+-function updateLayout() {
+-   bash(`niri msg keyboard-layouts | grep "*"`)
+-      .then((layout) => {
+-         const match = layout.match(/\* \d+ ([A-Za-z]+)/)!;
+-         if (layout.includes("English")) {
+-            layout_name_set("En");
+-         } else if (layout.includes("Russian")) {
+-            layout_name_set("Ru");
+-         } else {
+-            layout_name_set(match[1].substring(0, 2));
+-         }
+-      })
+-      .catch((err) => {
+-         print(`Failed to get keyboard layout: ${err}`);
+-      });
+-}
+-
+-export function KeyboardNiri() {
+-   if (!niri) {
+-      console.warn("Bar: keyboard module skipped: niri is not active");
+-      return <box visible={false} />;
+-   }
+-   const conf = config.bar.modules.keyboard;
+-   updateLayout();
+-   let niriconnect: number;
+-
+-   onCleanup(() => {
+-      if (niriconnect) niri.disconnect(niriconnect);
+-   });
+-
+-   return (
+-      <BarItem
+-         onPrimaryClick={conf["on-click"]}
+-         onSecondaryClick={conf["on-click-right"]}
+-         onMiddleClick={conf["on-click-middle"]}
+-         $={() => {
+-            niriconnect = niri.connect("keyboard-layout-switched", () => {
+-               updateLayout();
+-            });
+-         }}
+-         data={{
+-            lang: <label hexpand={isVertical} label={layout_name} />,
+-            icon: (
+-               <image
+-                  hexpand={isVertical}
+-                  iconName={icons.keyboard}
+-                  pixelSize={20}
+-               />
+-            ),
+-         }}
+-         format={conf.format}
+-      />
+-   );
+-}
+diff --git a/src/modules/bar/items/workspaces.tsx b/src/modules/bar/items/workspaces.tsx
+index 3eeaeca..615e8a5 100644
+--- a/src/modules/bar/items/workspaces.tsx
++++ b/src/modules/bar/items/workspaces.tsx
+@@ -1,5 +1,4 @@
+ import { compositor } from "@/options";
+-import { WorkspacesNiri } from "./workspaces/niri";
+ import { WorkspacesHypr } from "./workspaces/hypr";
+ import { With } from "ags";
+ import { Gdk } from "ags/gtk4";
+@@ -9,8 +8,6 @@ export function Workspaces({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
+       <box>
+          <With value={compositor}>
+             {(comp) => {
+-               if (comp === "niri")
+-                  return <WorkspacesNiri gdkmonitor={gdkmonitor} />;
+                if (comp === "hyprland")
+                   return <WorkspacesHypr gdkmonitor={gdkmonitor} />;
+                console.warn(
+diff --git a/src/modules/bar/items/workspaces/niri.tsx b/src/modules/bar/items/workspaces/niri.tsx
+deleted file mode 100644
+index 324b5b1..0000000
+--- a/src/modules/bar/items/workspaces/niri.tsx
++++ /dev/null
+@@ -1,232 +0,0 @@
+-import { Gdk, Gtk } from "ags/gtk4";
+-import AstalNiri from "gi://AstalNiri";
+-import { createBinding, createComputed, For, With } from "ags";
+-import { compositor, config, theme } from "@/options";
+-import {
+-   attachHoverScroll,
+-   bash,
+-   getAppInfo,
+-   truncateByFormat,
+-} from "@/src/lib/utils";
+-import { icons } from "@/src/lib/icons";
+-import BarItem, { FunctionsList } from "@/src/widgets/baritem";
+-import { isVertical, orientation } from "../../bar";
+-const niri = compositor.peek() === "niri" ? AstalNiri.get_default() : null;
+-
+-export function WorkspacesNiri({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
+-   if (!niri) {
+-      console.warn("Bar: workspaces module skipped: niri is not active");
+-      return <box visible={false} />;
+-   }
+-   const conf = config.bar.modules.workspaces;
+-   const output = createBinding(niri, "outputs").as((outputs) =>
+-      outputs.find((output) => output.model === gdkmonitor.model),
+-   );
+-
+-   function AppButton({ client }: { client: AstalNiri.Window }) {
+-      const apps_icons = conf["taskbar-icons"];
+-      const appInfo = getAppInfo(client.app_id);
+-      const iconName =
+-         apps_icons[client.app_id] || appInfo?.iconName || icons.apps_default;
+-      const title = createBinding(client, "title");
+-      const classes = createBinding(niri!, "focusedWindow").as((fcsClient) => {
+-         const classes = ["taskbar-button"];
+-         if (!fcsClient || !client.app_id || !fcsClient.app_id) return classes;
+-         const isFocused = fcsClient.id === client?.id;
+-         if (isFocused) classes.push("focused");
+-         return classes;
+-      });
+-
+-      const hasIndicator = conf["window-format"].includes("{indicator}");
+-
+-      const formatWithoutIndicator = conf["window-format"]
+-         .replace(/\{indicator\}\s*/g, "")
+-         .trim();
+-      const mainFormat = formatWithoutIndicator
+-         ? formatWithoutIndicator
+-         : "{icon}";
+-
+-      const indicatorValign =
+-         config.bar.position === "top"
+-            ? Gtk.Align.START
+-            : config.bar.position === "bottom"
+-              ? Gtk.Align.END
+-              : Gtk.Align.CENTER;
+-
+-      const indicatorHalign =
+-         config.bar.position === "left"
+-            ? Gtk.Align.START
+-            : config.bar.position === "right"
+-              ? Gtk.Align.END
+-              : Gtk.Align.CENTER;
+-
+-      return (
+-         <overlay hexpand={isVertical} cssClasses={classes}>
+-            {hasIndicator && (
+-               <box
+-                  $type={"overlay"}
+-                  class={"indicator"}
+-                  valign={indicatorValign}
+-                  halign={indicatorHalign}
+-                  vexpand
+-                  hexpand
+-               />
+-            )}
+-            <BarItem
+-               format={mainFormat}
+-               onPrimaryClick={() => client.focus(client.id)}
+-               onMiddleClick={() =>
+-                  bash(`niri msg action close-window --id ${client.id}`)
+-               }
+-               data={{
+-                  icon: (
+-                     <image
+-                        iconName={iconName}
+-                        pixelSize={20}
+-                        hexpand={isVertical}
+-                     />
+-                  ),
+-                  title: (
+-                     <label
+-                        label={title((t) =>
+-                           truncateByFormat(t, "title", mainFormat),
+-                        )}
+-                        hexpand={isVertical}
+-                     />
+-                  ),
+-                  name: (
+-                     <label
+-                        label={truncateByFormat(
+-                           appInfo?.name.trim() || client.app_id,
+-                           "name",
+-                           mainFormat,
+-                        )}
+-                        hexpand={isVertical}
+-                     />
+-                  ),
+-               }}
+-               tooltipText={title}
+-            />
+-         </overlay>
+-      );
+-   }
+-
+-   function WorkspaceButton({ ws }: { ws: AstalNiri.Workspace }) {
+-      const windows = createBinding(ws, "windows");
+-      const windowCount = windows((w) => w.length);
+-      const focusedWorkspace = createBinding(niri!, "focusedWorkspace");
+-      const visible = createComputed(() => {
+-         if (conf["hide-empty"]) {
+-            return windowCount() > 0 || focusedWorkspace().id === ws.id;
+-         }
+-         return true;
+-      });
+-      const classNames = focusedWorkspace((fws) => {
+-         const classes = ["bar-item", "workspace"];
+-         const active = fws.id == ws.id;
+-         if (active) classes.push("active");
+-         return classes;
+-      });
+-
+-      return conf["workspace-format"] === "" ? (
+-         <box
+-            cssClasses={classNames}
+-            valign={Gtk.Align.CENTER}
+-            halign={Gtk.Align.CENTER}
+-            visible={visible}
+-         >
+-            <Gtk.GestureClick
+-               onPressed={(ctrl, _, x, y) => {
+-                  const button = ctrl.get_current_button();
+-                  if (button === Gdk.BUTTON_PRIMARY) ws.focus();
+-               }}
+-            />
+-         </box>
+-      ) : (
+-         <BarItem
+-            cssClasses={classNames}
+-            onPrimaryClick={() => ws.focus()}
+-            format={conf["workspace-format"]}
+-            visible={visible}
+-            data={{
+-               id: <label label={ws.idx.toString()} hexpand={isVertical} />,
+-               name: <label label={ws.name} hexpand={isVertical} />,
+-               count: (
+-                  <label
+-                     label={windowCount((c) => c.toString())}
+-                     hexpand={isVertical}
+-                  />
+-               ),
+-               windows: (
+-                  <box
+-                     orientation={orientation}
+-                     spacing={theme.bar.spacing}
+-                     visible={windowCount((c) => c > 0)}
+-                  >
+-                     <For each={windows}>
+-                        {(client: AstalNiri.Window) => (
+-                           <AppButton client={client} />
+-                        )}
+-                     </For>
+-                  </box>
+-               ),
+-            }}
+-         />
+-      );
+-   }
+-
+-   function Workspaces({ output }: { output: AstalNiri.Output }) {
+-      const workspaces = createBinding(output, "workspaces").as((workspaces) =>
+-         workspaces.sort((a, b) => a.idx - b.idx),
+-      );
+-
+-      return (
+-         <box
+-            spacing={theme.bar.spacing}
+-            orientation={orientation}
+-            hexpand={isVertical}
+-            cssClasses={[
+-               "workspaces",
+-               conf["workspace-format"] === "" ? "compact" : "",
+-            ]}
+-            $={(self) =>
+-               attachHoverScroll(self, ({ dy }) => {
+-                  if (dy < 0) {
+-                     FunctionsList[
+-                        conf["on-scroll-up"] as keyof typeof FunctionsList
+-                     ]();
+-                  } else if (dy > 0) {
+-                     FunctionsList[
+-                        conf["on-scroll-down"] as keyof typeof FunctionsList
+-                     ]();
+-                  }
+-               })
+-            }
+-         >
+-            {conf["workspace-format"] === "" ? (
+-               <box
+-                  class={"content"}
+-                  orientation={orientation}
+-                  spacing={theme.bar.spacing}
+-               >
+-                  <For each={workspaces}>
+-                     {(ws) => <WorkspaceButton ws={ws} />}
+-                  </For>
+-               </box>
+-            ) : (
+-               <For each={workspaces}>
+-                  {(ws) => <WorkspaceButton ws={ws} />}
+-               </For>
+-            )}
+-         </box>
+-      );
+-   }
+-
+-   return (
+-      <box orientation={orientation} hexpand={isVertical}>
+-         <With value={output}>
+-            {(output) => output && <Workspaces output={output} />}
+-         </With>
+-      </box>
+-   );
+-}
+diff --git a/src/widgets/baritem.tsx b/src/widgets/baritem.tsx
+index 8193241..17443ee 100644
+--- a/src/widgets/baritem.tsx
++++ b/src/widgets/baritem.tsx
+@@ -12,7 +12,6 @@ import { compositor, theme } from "@/options";
+ import { isVertical, orientation } from "../modules/bar/bar";
+ import { windows_names } from "@/windows";
+ import AstalHyprland from "gi://AstalHyprland?version=0.1";
+-import AstalNiri from "gi://AstalNiri?version=0.1";
+ import AstalWp from "gi://AstalWp?version=0.1";
+ import ScreenRecorder from "@/src/services/screenrecorder";
+ 
+@@ -78,17 +77,13 @@ export const FunctionsList = {
+    "toggle-power": () => toggleQsModule(windows_names.power, "battery"),
+    "workspace-up": () => {
+       const comp = compositor.peek();
+-      if (comp === "niri") {
+-         AstalNiri.msg.focus_workspace_up();
+-      } else if (comp === "hyprland") {
++	  if (comp === "hyprland") {
+          getHyprland()?.dispatch("workspace", "-1");
+       }
+    },
+    "workspace-down": () => {
+       const comp = compositor.peek();
+-      if (comp === "niri") {
+-         AstalNiri.msg.focus_workspace_down();
+-      } else if (comp === "hyprland") {
++	  if (comp === "hyprland") {
+          getHyprland()?.dispatch("workspace", "+1");
+       }
+    },
+@@ -118,7 +113,6 @@ export const FunctionsList = {
+    },
+    "switch-language": async () => {
+       const comp = compositor.peek();
+-      if (comp === "niri") AstalNiri.msg.switch_layout_next();
+       if (comp === "hyprland") {
+          try {
+             const json = await bash("hyprctl devices -j");

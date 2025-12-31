@@ -1,0 +1,13 @@
+diff --git a/src/components/menus/dashboard/stats/helpers.ts b/src/components/menus/dashboard/stats/helpers.ts
+index 590e1fe..d08bb94 100644
+--- a/src/components/menus/dashboard/stats/helpers.ts
++++ b/src/components/menus/dashboard/stats/helpers.ts
+@@ -23,7 +23,7 @@ export const storageService = new StorageService({ pathsToMonitor: paths });
+  */
+ export const handleClick = (): void => {
+     App.get_window('dashboardmenu')?.set_visible(false);
+-    execAsync(`bash -c "${terminal} -e btop"`).catch((err) => `Failed to open btop: ${err}`);
++    execAsync(`bash -c "${terminal.get()} -e btop"`).catch((err) => `Failed to open btop: ${err}`);
+ };
+ 
+ /**

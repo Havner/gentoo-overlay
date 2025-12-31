@@ -1,0 +1,21 @@
+diff --git a/src/components/menus/bluetooth/devices/device/index.tsx b/src/components/menus/bluetooth/devices/device/index.tsx
+index 151a5e0..64f4d90 100644
+--- a/src/components/menus/bluetooth/devices/device/index.tsx
++++ b/src/components/menus/bluetooth/devices/device/index.tsx
+@@ -21,10 +21,14 @@ export const BluetoothDevice = ({ device, connectedDevices }: BluetoothDevicePro
+             hexpand
+             className={`bluetooth-element-item ${device}`}
+             onClick={(_, event) => {
+-                if (!connectedDevices.includes(device.address) && isPrimaryClick(event)) {
+-                    device.connect_device((res) => {
++                if (isPrimaryClick(event) && device.connected) {
++                    device.disconnect_device((res) => {
+                         console.info(res);
+                     });
++                } else {
++                    device.connect_device((res) => {
++                        console.error(res);
++                    });
+                 }
+             }}
+         >
