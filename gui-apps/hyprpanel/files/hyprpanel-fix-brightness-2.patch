@@ -1,0 +1,16 @@
+diff --git a/src/services/system/brightness/index.ts b/src/services/system/brightness/index.ts
+index 9bda47d..acf3dbe 100644
+--- a/src/services/system/brightness/index.ts
++++ b/src/services/system/brightness/index.ts
+@@ -4,9 +4,9 @@ import { SystemUtilities } from 'src/core/system/SystemUtilities';
+ const isBrightnessAvailable = SystemUtilities.checkExecutable(['brightnessctl']);
+ 
+ const get = (args: string): number => (isBrightnessAvailable ? Number(exec(`brightnessctl ${args}`)) : 0);
+-const screen = isBrightnessAvailable ? exec('bash -c "ls -w1 /sys/class/backlight | head -1"') : '';
++const screen = isBrightnessAvailable ? exec('bash -c "ls -w1 /sys/class/backlight | grep -v appletb | head -1"') : '';
+ const kbd = isBrightnessAvailable
+-    ? exec('bash -c "ls -w1 /sys/class/leds | grep \'::kbd_backlight$\' | head -1"')
++    ? exec('bash -c "ls -w1 /sys/class/leds | grep \':kbd_backlight$\' | head -1"')
+     : '';
+ 
+ /**
