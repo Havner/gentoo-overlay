@@ -14,12 +14,12 @@ This overlay needs to be coupled with [GURU] for some dependencies.
 
 # Highlights
 
-This overlay contains latest [hyprland] with most of its dependencies. If some
-hypr package from [upstream] is not here it means its newest version is already
-included in the main gentoo repository (something older like scanner or
-qt-support) or in [GURU] (hypridle, hyprlock, hyprpaper, etc). Everything else
-is in here in the latest versions. I'll try to keep it up to date, at least as
-long as I use hyprland.
+This overlay contains latest [hyprland] with most of its dependencies. I'll try
+to keep it up to date, at least as long as I use hyprland.
+
+If you found this overlay for Hyprland you'd probably be better of with:
+
+https://codeberg.org/hyproverlay/hyproverlay.git
 
 Also included is [hyprpanel] with all its dependencies (astal,
 aylurs-gtk-shell, swww, etc) that according to what I've been able to find is
