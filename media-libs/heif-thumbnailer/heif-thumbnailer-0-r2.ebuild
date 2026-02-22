@@ -13,7 +13,7 @@ DEPEND="${RDEPEND}"
 
 # This package has no fetchable sources
 src_unpack() {
-	cat > "gdk-pixbuf-thumbnailer-heif.thumbnailer" <<'EOF'
+	cat > "heif.thumbnailer" <<'EOF'
 [Thumbnailer Entry]
 TryExec=/usr/bin/gdk-pixbuf-thumbnailer
 Exec=/usr/bin/gdk-pixbuf-thumbnailer -s %s %u %o
@@ -25,5 +25,5 @@ src_install() {
 	default
 
 	insinto /usr/share/thumbnailers
-	doins gdk-pixbuf-thumbnailer-heif.thumbnailer
+	doins heif.thumbnailer
 }
