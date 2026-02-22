@@ -1,0 +1,3 @@
+# exactly-one-of ( gtk qt6 )
+# being GNOME package prioritize gtk
+media-libs/libmediaart -qt6

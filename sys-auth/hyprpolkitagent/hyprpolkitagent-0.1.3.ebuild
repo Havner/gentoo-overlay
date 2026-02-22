@@ -18,7 +18,10 @@ RDEPEND="
 	dev-qt/qtdeclarative:6
 	gui-libs/hyprutils
 	sys-auth/polkit
-	sys-auth/polkit-qt[qt6]
+	|| (
+	   sys-auth/polkit-qt[qt6]
+	   >=sys-auth/polkit-qt-0.200.0-r1
+	)
 	gui-libs/hyprland-qt-support
 "
 DEPEND="
