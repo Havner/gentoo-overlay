@@ -25,8 +25,7 @@ HYPRPM_RDEPEND="
 	dev-vcs/git
 	virtual/pkgconfig
 	dev-cpp/tomlplusplus
-	>=dev-cpp/glaze-6.1.0
-	<dev-cpp/glaze-7.0.0
+	>=dev-cpp/glaze-7.0.0
 "
 RDEPEND="
 	${HYPRPM_RDEPEND}
@@ -39,7 +38,7 @@ RDEPEND="
 	>=dev-libs/hyprgraphics-0.1.6
 	>=x11-libs/libxkbcommon-1.11.0
 	sys-apps/util-linux
-	>=dev-libs/wayland-1.22.90
+	>=dev-libs/wayland-1.22.91
 	>=dev-libs/wayland-protocols-1.45
 	x11-libs/cairo
 	x11-libs/pango
