@@ -1,0 +1,111 @@
+diff --git a/libraries/ZWidget/include/zwidget/window/window.h b/libraries/ZWidget/include/zwidget/window/window.h
+index 0539f77..51077e0 100644
+--- a/libraries/ZWidget/include/zwidget/window/window.h
++++ b/libraries/ZWidget/include/zwidget/window/window.h
+@@ -3,6 +3,7 @@
+ #include <memory>
+ #include <string>
+ #include <functional>
++#include <stdint.h>
+ #include "../core/rect.h"
+ 
+ class Engine;
+diff --git a/source/common/audio/music/i_music.h b/source/common/audio/music/i_music.h
+index aa2d48e..6f7308e 100644
+--- a/source/common/audio/music/i_music.h
++++ b/source/common/audio/music/i_music.h
+@@ -34,6 +34,8 @@
+ #ifndef __I_MUSIC_H__
+ #define __I_MUSIC_H__
+ 
++#include <math.h>
++
+ //
+ //	MUSIC I/O
+ //
+diff --git a/source/common/engine/m_random.h b/source/common/engine/m_random.h
+index ba0bcaf..35a5849 100644
+--- a/source/common/engine/m_random.h
++++ b/source/common/engine/m_random.h
+@@ -36,6 +36,7 @@
+ #define __M_RANDOM__
+ 
+ #include <stdio.h>
++#include <tarray.h>
+ #include "basics.h"
+ #include "sfmt/SFMTObj.h"
+ 
+diff --git a/source/common/utility/r_memory.h b/source/common/utility/r_memory.h
+index d9db538..fa2b1ef 100644
+--- a/source/common/utility/r_memory.h
++++ b/source/common/utility/r_memory.h
+@@ -2,6 +2,7 @@
+ 
+ #include <memory>
+ #include <vector>
++#include <cstdint>
+ 
+ // Memory needed for the duration of a frame rendering
+ class RenderMemory
+diff --git a/source/launcher/settingspage.h b/source/launcher/settingspage.h
+index 5c07531..281595f 100644
+--- a/source/launcher/settingspage.h
++++ b/source/launcher/settingspage.h
+@@ -1,5 +1,7 @@
+ #pragma once
+ 
++#include <tarray.h>
++#include <zstring.h>
+ #include <zwidget/core/widget.h>
+ 
+ #define RENDER_BACKENDS
+diff --git a/tools/lemon/lemon.c b/tools/lemon/lemon.c
+index bdc004a..7a86322 100644
+--- a/tools/lemon/lemon.c
++++ b/tools/lemon/lemon.c
+@@ -53,7 +53,7 @@ extern int access(char *path, int mode);
+ #endif
+ 
+ static int showPrecedenceConflict = 0;
+-static void *msort(void *list, void *next, int (*cmp)());
++static void *msort(void *list, void *next, int (*cmp)(const char*, const char*));
+ 
+ /*
+ ** Compilers are getting increasingly pedantic about type conversions
+@@ -72,12 +72,12 @@ static struct action *Action_new(void);
+ static struct action *Action_sort(struct action *);
+ 
+ /********** From the file "build.h" ************************************/
+-void FindRulePrecedences();
+-void FindFirstSets();
+-void FindStates();
+-void FindLinks();
+-void FindFollowSets();
+-void FindActions();
++void FindRulePrecedences(struct lemon *);
++void FindFirstSets(struct lemon *);
++void FindStates(struct lemon *);
++void FindLinks(struct lemon *);
++void FindFollowSets(struct lemon *);
++void FindActions(struct lemon *);
+ 
+ /********* From the file "configlist.h" *********************************/
+ void Configlist_init(void);
+@@ -1757,7 +1757,7 @@ int main(int argc, char **argv)
+ **   The "next" pointers for elements in the lists a and b are
+ **   changed.
+ */
+-static void *merge(void *a,void *b,int (*cmp)(),size_t offset)
++static void *merge(void *a,void *b,int (*cmp)(const char*, const char*),size_t offset)
+ {
+   char *ptr, *head;
+ 
+@@ -1805,7 +1805,7 @@ static void *merge(void *a,void *b,int (*cmp)(),size_t offset)
+ **   The "next" pointers for elements in list are changed.
+ */
+ #define LISTSIZE 30
+-static void *msort(void *list,void *next,int (*cmp)())
++static void *msort(void *list,void *next,int (*cmp)(const char*, const char*))
+ {
+   size_t offset;
+   char *ep;
