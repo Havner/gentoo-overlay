@@ -1,6 +1,6 @@
 EAPI=8
 
-inherit unpacker xdg-utils
+inherit unpacker xdg
 
 DESCRIPTION="Linux software for your Elgato Stream Deck"
 HOMEPAGE="https://github.com/nekename/OpenDeck"
@@ -34,9 +34,9 @@ src_install() {
 }
 
 pkg_postinst() {
-	xdg_icon_cache_update
+	xdg_pkg_postinst
 }
 
 pkg_postrm() {
-	xdg_icon_cache_update
+	xdg_pkg_postinst
 }

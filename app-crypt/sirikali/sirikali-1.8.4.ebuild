@@ -3,7 +3,7 @@
 
 EAPI="8"
 
-inherit cmake
+inherit cmake xdg
 
 DESCRIPTION="A Qt/C++ GUI front end to some encrypted filesystems and sshfs"
 HOMEPAGE="
@@ -39,9 +39,9 @@ src_configure() {
 }
 
 pkg_postinst() {
-	xdg_icon_cache_update
+	xdg_pkg_postinst
 }
 
 pkg_postrm() {
-	xdg_icon_cache_update
+	xdg_pkg_postinst
 }
