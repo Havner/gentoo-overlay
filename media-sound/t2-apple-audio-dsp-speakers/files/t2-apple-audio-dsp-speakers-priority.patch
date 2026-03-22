@@ -1,0 +1,12 @@
+diff '--color=auto' -urN t2-apple-audio-dsp-speakers-v0.2.0-1.orig/config/10-t2_161_speakers.conf t2-apple-audio-dsp-speakers-v0.2.0-1/config/10-t2_161_speakers.conf
+--- t2-apple-audio-dsp-speakers-v0.2.0-1.orig/config/10-t2_161_speakers.conf	2023-08-26 20:07:22.000000000 +0200
++++ t2-apple-audio-dsp-speakers-v0.2.0-1/config/10-t2_161_speakers.conf	2026-03-22 19:45:10.549890841 +0100
+@@ -231,6 +231,8 @@
+                 media.class = Audio/Sink
+                 audio.channels = 2
+                 audio.position = [ FL FR ]
++                priority.driver = 900
++                priority.session = 900
+             }
+ 
+             playback.props = {

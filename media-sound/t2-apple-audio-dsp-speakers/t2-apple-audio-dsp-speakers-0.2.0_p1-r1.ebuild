@@ -21,6 +21,10 @@ RDEPEND="
 	media-video/wireplumber
 "
 
+PATCHES=(
+	"${FILESDIR}"/${PN}-priority.patch
+)
+
 src_install() {
 	insinto /etc/pipewire/pipewire.conf.d
 	doins "${S}/config/10-t2_161_speakers.conf"
