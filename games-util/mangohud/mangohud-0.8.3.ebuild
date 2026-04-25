@@ -13,18 +13,20 @@ MY_PV=$(ver_cut 1-3)
 DESCRIPTION="Vulkan and OpenGL overlay for monitoring FPS, sensors, system load and more"
 HOMEPAGE="https://github.com/flightlessmango/MangoHud"
 
-VK_HEADERS_VER="1.3.283"
-VK_HEADERS_MESON_WRAP_VER="1"
+VK_HEADERS_VER="1.4.346"
+VK_UTIL_LIBS_VER="1.4.346"
+
 IMGUI_VER="1.91.6"
 IMGUI_MESON_WRAP_VER="3"
 IMPLOT_VER="0.16"
 IMPLOT_MESON_WRAP_VER="1"
 
+
 SRC_URI="
 	https://github.com/KhronosGroup/Vulkan-Headers/archive/v${VK_HEADERS_VER}.tar.gz
 		-> vulkan-headers-${VK_HEADERS_VER}.tar.gz
-	https://wrapdb.mesonbuild.com/v2/vulkan-headers_${VK_HEADERS_VER}-${VK_HEADERS_MESON_WRAP_VER}/get_patch
-		-> vulkan-headers-${VK_HEADERS_VER}-${VK_HEADERS_MESON_WRAP_VER}-meson-wrap.zip
+	https://github.com/KhronosGroup/Vulkan-Utility-Libraries/archive/v${VK_UTIL_LIBS_VER}.tar.gz
+		-> vulkan-utility-libraries-${VK_UTIL_LIBS_VER}.tar.gz
 	https://github.com/ocornut/imgui/archive/v${IMGUI_VER}.tar.gz
 		-> imgui-${IMGUI_VER}.tar.gz
 	https://wrapdb.mesonbuild.com/v2/imgui_${IMGUI_VER}-${IMGUI_MESON_WRAP_VER}/get_patch
@@ -108,8 +110,12 @@ src_unpack() {
 	fi
 
 	unpack vulkan-headers-${VK_HEADERS_VER}.tar.gz
-	unpack vulkan-headers-${VK_HEADERS_VER}-${VK_HEADERS_MESON_WRAP_VER}-meson-wrap.zip
 	mv "${WORKDIR}/Vulkan-Headers-${VK_HEADERS_VER}" "${S}/subprojects/" || die
+	cp "${S}/subprojects/packagefiles/vulkan-headers/meson.build" "${S}/subprojects/Vulkan-Headers-${VK_HEADERS_VER}/" || die
+	unpack vulkan-utility-libraries-${VK_UTIL_LIBS_VER}.tar.gz
+	mv "${WORKDIR}/Vulkan-Utility-Libraries-${VK_UTIL_LIBS_VER}" "${S}/subprojects/" || die
+	cp "${S}/subprojects/packagefiles/vulkan-utility-libraries/meson.build" "${S}/subprojects/Vulkan-Utility-Libraries-${VK_UTIL_LIBS_VER}/" || die
+
 	unpack imgui-${IMGUI_VER}.tar.gz
 	unpack imgui-${IMGUI_VER}-${IMGUI_MESON_WRAP_VER}-meson-wrap.zip
 	mv "${WORKDIR}/imgui-${IMGUI_VER}" "${S}/subprojects/" || die
