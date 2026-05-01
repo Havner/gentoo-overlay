@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+command="/usr/bin/t2fand"
+pidfile="/run/t2fand.pid"
+
+start() {
+	ebegin "Starting t2fand"
+
+	start-stop-daemon --start --exec ${command} \
+		--pidfile ${pidfile} --background --
+	eend $?
+}
