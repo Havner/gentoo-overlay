@@ -6,7 +6,7 @@ EAPI=8
 inherit optfeature
 
 DESCRIPTION="Community-maintained extensions for hyprland"
-HOMEPAGE="https://hyprland.org/"
+HOMEPAGE="https://github.com/hyprwm/contrib"
 SRC_URI="https://github.com/hyprwm/contrib/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 
 S="${WORKDIR}/contrib-${PV}"
