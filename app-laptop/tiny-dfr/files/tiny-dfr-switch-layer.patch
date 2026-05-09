@@ -1,0 +1,84 @@
+diff --git a/share/tiny-dfr/config.toml b/share/tiny-dfr/config.toml
+index 11c5c75..d68a9a1 100644
+--- a/share/tiny-dfr/config.toml
++++ b/share/tiny-dfr/config.toml
+@@ -35,6 +35,10 @@ AdaptiveBrightness = true
+ # Accepted values are 0-255
+ ActiveBrightness = 128
+ 
++# With a quick double press of the FN key switch the default layer.
++# 0 disables the feature. >0 defines how quick the double press must be in ms.
++DoublePressSwitchLayers = 200
++
+ # This key defines the contents of the primary layer
+ # (the one with F{number} keys)
+ # You can change the individual buttons, add, or remove them
+diff --git a/src/config.rs b/src/config.rs
+index 10d5936..063c318 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -22,6 +22,7 @@ pub struct Config {
+     pub font_face: FontFace,
+     pub adaptive_brightness: bool,
+     pub active_brightness: u32,
++    pub double_press_switch_layers: u32,
+ }
+ 
+ #[derive(Deserialize)]
+@@ -33,6 +34,7 @@ struct ConfigProxy {
+     font_template: Option<String>,
+     adaptive_brightness: Option<bool>,
+     active_brightness: Option<u32>,
++    double_press_switch_layers: Option<u32>,
+     primary_layer_keys: Option<Vec<ButtonConfig>>,
+     media_layer_keys: Option<Vec<ButtonConfig>>,
+ }
+@@ -112,6 +114,7 @@ fn load_config(width: u16) -> (Config, [FunctionLayer; 2]) {
+         base.media_layer_keys = user.media_layer_keys.or(base.media_layer_keys);
+         base.primary_layer_keys = user.primary_layer_keys.or(base.primary_layer_keys);
+         base.active_brightness = user.active_brightness.or(base.active_brightness);
++        base.double_press_switch_layers = user.double_press_switch_layers.or(base.double_press_switch_layers);
+     };
+     let mut media_layer_keys = base.media_layer_keys.unwrap();
+     let mut primary_layer_keys = base.primary_layer_keys.unwrap();
+@@ -147,6 +150,7 @@ fn load_config(width: u16) -> (Config, [FunctionLayer; 2]) {
+         adaptive_brightness: base.adaptive_brightness.unwrap(),
+         font_face: load_font(&base.font_template.unwrap()),
+         active_brightness: base.active_brightness.unwrap(),
++        double_press_switch_layers: base.double_press_switch_layers.unwrap(),
+     };
+     (cfg, layers)
+ }
+diff --git a/src/main.rs b/src/main.rs
+index da6750a..cd8de7c 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -37,6 +37,7 @@ use std::{
+     },
+     panic::{self, AssertUnwindSafe},
+     path::{Path, PathBuf},
++    time::{Duration, Instant},
+ };
+ use udev::MonitorBuilder;
+ 
+@@ -847,6 +848,7 @@ fn real_main(drm: &mut DrmBackend) {
+     let mut cfg_mgr = ConfigManager::new();
+     let (mut cfg, mut layers) = cfg_mgr.load_config(width);
+     let mut pixel_shift = PixelShiftManager::new();
++    let mut last = Instant::now();
+ 
+     // drop privileges to input and video group
+     let groups = ["input", "video"];
+@@ -993,6 +995,12 @@ fn real_main(drm: &mut DrmBackend) {
+                 }
+                 Event::Keyboard(KeyboardEvent::Key(key)) => {
+                     if key.key() == Key::Fn as u32 {
++                        if cfg.double_press_switch_layers > 0 && key.key_state() == KeyState::Pressed {
++                            if last.elapsed() < Duration::from_millis(cfg.double_press_switch_layers.into()) {
++                                layers.swap(0, 1);
++                            }
++                            last = Instant::now();
++                        }
+                         let new_layer = match key.key_state() {
+                             KeyState::Pressed => 1,
+                             KeyState::Released => 0,

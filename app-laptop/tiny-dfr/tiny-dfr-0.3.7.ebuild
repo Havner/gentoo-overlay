@@ -158,6 +158,9 @@ SRC_URI="
 	${CARGO_CRATE_URIS}
 	https://github.com/AsahiLinux/tiny-dfr/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
 "
+PATCHES=(
+	"${FILESDIR}"/"${PN}"-switch-layer.patch
+)
 
 LICENSE="MIT"
 SLOT="0"
