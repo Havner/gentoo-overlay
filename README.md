@@ -10,33 +10,5 @@ wrong/incomplete and those ebuilds probably don't follow the rules
 properly. This is simply my own private playground, not an overlay to be used by
 others. You have been warned.
 
-This overlay needs to be coupled with [GURU] for some dependencies.
-
-# Highlights
-
-This overlay contains latest [hyprland] with most of its dependencies. I'll try
-to keep it up to date, at least as long as I use hyprland.
-
-If you found this overlay for Hyprland you'd probably be better of with:
-
-https://codeberg.org/hyproverlay/hyproverlay.git
-
-Also included is [hyprpanel] with all its dependencies (astal,
-aylurs-gtk-shell, swww, etc) that according to what I've been able to find is
-not available anywhere else for gentoo (at least not in its newest
-versions). Some other runtime dependencies are in GURU so make sure you've got
-that enabled as well.
-
-<br>
-<br>
-
-![screenshot]
-
-<!----------------------------------------------------------------------------->
-
-[hyprland]: https://hypr.land/
-[upstream]: https://github.com/hyprwm
-[GURU]: https://wiki.gentoo.org/wiki/Project:GURU
-[hyprpanel]: https://hyprpanel.com/
-
-[screenshot]: https://i.ibb.co/5hrpyYJ4/hypr.jpg
+This overlay needs to be coupled with
+[GURU](https://wiki.gentoo.org/wiki/Project:GURU) for some dependencies.
