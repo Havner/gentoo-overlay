@@ -159,7 +159,7 @@ SRC_URI="
 	https://github.com/AsahiLinux/tiny-dfr/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
 "
 PATCHES=(
-	"${FILESDIR}"/"${PN}"-switch-layer.patch
+	"${FILESDIR}"/"${PN}"-Add-DoublePressSwitchLayers-feature.patch
 )
 
 LICENSE="MIT"

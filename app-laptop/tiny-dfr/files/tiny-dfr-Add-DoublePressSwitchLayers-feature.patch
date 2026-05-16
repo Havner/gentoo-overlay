@@ -1,14 +1,31 @@
+From f4f8fb71bd16a95b3d52b8b0d34d08e8df7b5972 Mon Sep 17 00:00:00 2001
+From: Lukasz Pawelczyk <havner@gmail.com>
+Date: Sat, 9 May 2026 13:43:40 +0200
+Subject: [PATCH] Add DoublePressSwitchLayers feature
+
+Make a quick double press of the FN key switch the default layer.
+How quick the double press needs to be or whether the feature is active at all
+is configurable in the config file.
+
+Signed-off-by: Lukasz Pawelczyk <havner@gmail.com>
+---
+ share/tiny-dfr/config.toml | 5 +++++
+ src/config.rs              | 4 ++++
+ src/main.rs                | 8 ++++++++
+ 3 files changed, 17 insertions(+)
+
 diff --git a/share/tiny-dfr/config.toml b/share/tiny-dfr/config.toml
-index 11c5c75..d68a9a1 100644
+index 11c5c75..e19815f 100644
 --- a/share/tiny-dfr/config.toml
 +++ b/share/tiny-dfr/config.toml
-@@ -35,6 +35,10 @@ AdaptiveBrightness = true
+@@ -35,6 +35,11 @@ AdaptiveBrightness = true
  # Accepted values are 0-255
  ActiveBrightness = 128
  
 +# With a quick double press of the FN key switch the default layer.
-+# 0 disables the feature. >0 defines how quick the double press must be in ms.
-+DoublePressSwitchLayers = 200
++# 0 disables the feature, >0 defines how quick the double press must be in ms.
++# A sensible value to try is around 200.
++DoublePressSwitchLayers = 0
 +
  # This key defines the contents of the primary layer
  # (the one with F{number} keys)
@@ -82,3 +99,6 @@ index da6750a..cd8de7c 100644
                          let new_layer = match key.key_state() {
                              KeyState::Pressed => 1,
                              KeyState::Released => 0,
+-- 
+2.53.0
+
