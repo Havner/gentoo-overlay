@@ -5,7 +5,7 @@ EAPI=8
 
 DESCRIPTION="Apple T2 mic DSP configs"
 HOMEPAGE="https://t2linux.org/"
-SRC_URI="https://github.com/lemmyg/t2-apple-audio-dsp/archive/refs/tags/mic-v$(ver_cut 1-3)-$(ver_cut 5).tar.gz"
+#SRC_URI="https://github.com/lemmyg/t2-apple-audio-dsp/archive/refs/tags/mic-v$(ver_cut 1-3)-$(ver_cut 5).tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -18,6 +18,10 @@ RDEPEND="
 	media-video/pipewire[sound-server]
 	media-video/wireplumber
 "
+
+src_unpack() {
+	tar xf "${FILESDIR}/mic-v$(ver_cut 1-3)-$(ver_cut 5).tar.gz"
+}
 
 src_install() {
 	insinto /etc/pipewire/pipewire.conf.d

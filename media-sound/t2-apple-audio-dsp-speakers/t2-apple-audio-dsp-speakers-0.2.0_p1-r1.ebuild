@@ -5,7 +5,7 @@ EAPI=8
 
 DESCRIPTION="Apple T2 speakers DSP configs"
 HOMEPAGE="https://t2linux.org/"
-SRC_URI="https://github.com/lemmyg/t2-apple-audio-dsp/archive/refs/tags/speakers-v$(ver_cut 1-3)-$(ver_cut 5).tar.gz"
+#SRC_URI="https://github.com/lemmyg/t2-apple-audio-dsp/archive/refs/tags/speakers-v$(ver_cut 1-3)-$(ver_cut 5).tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -24,6 +24,10 @@ RDEPEND="
 PATCHES=(
 	"${FILESDIR}"/${PN}-priority.patch
 )
+
+src_unpack() {
+	tar xf "${FILESDIR}/speakers-v$(ver_cut 1-3)-$(ver_cut 5).tar.gz"
+}
 
 src_install() {
 	insinto /etc/pipewire/pipewire.conf.d
