@@ -1,0 +1,70 @@
+--- brave-browser-1.91.171.ebuild	2026-06-10 13:14:45.366800664 +0200
++++ brave-origin-1.91.171.ebuild	2026-06-12 04:01:14.187267398 +0200
+@@ -12,14 +12,14 @@
+ DESCRIPTION="The Brave Web Browser"
+ HOMEPAGE="https://brave.com/"
+ 
+-if [[ ${PN} == brave-browser ]]; then
++if [[ ${PN} == brave-origin ]]; then
+ 	MY_PN=${PN}-stable
+ else
+ 	MY_PN=${PN}
+ fi
+ 
+ BASE_URI="https://github.com/brave/brave-browser/releases/download/v${PV}"
+-for _arch in amd64 arm64; do
++for _arch in amd64; do
+ 	SRC_URI+="
+ 		${_arch}? (
+ 			${BASE_URI}/${PN}_${PV}_${_arch}.deb
+@@ -78,7 +78,7 @@
+ 	selinux? ( sec-policy/selinux-chromium )
+ "
+ 
+-if [[ ${PN} == brave-browser ]]; then
++if [[ ${PN} == brave-origin ]]; then
+ 	BDEPEND="verify-sig? ( >=sec-keys/openpgp-keys-brave-browser-release-20250709 )"
+ 	VERIFY_SIG_OPENPGP_KEY_PATH=/usr/share/openpgp-keys/brave-browser-release.asc
+ else
+@@ -87,8 +87,8 @@
+ fi
+ 
+ QA_PREBUILT="*"
+-QA_DESKTOP_FILE="usr/share/applications/brave-browser.*\\.desktop"
+-BRAVE_HOME="opt/brave.com/brave${PN#brave-browser}"
++QA_DESKTOP_FILE="usr/share/applications/brave-origin.*\\.desktop"
++BRAVE_HOME="opt/brave.com/brave-origin${PN#brave-origin}"
+ 
+ pkg_pretend() {
+ 	# Protect against people using autounmask overzealously
+@@ -130,9 +130,9 @@
+ 
+ 	gzip -d usr/share/doc/${PF}/changelog.gz || die
+ 	gzip -d usr/share/man/man1/${MY_PN}.1.gz || die
+-	if [[ -L usr/share/man/man1/brave-browser.1.gz ]]; then
+-		rm usr/share/man/man1/brave-browser.1.gz || die
+-		dosym ${MY_PN}.1 usr/share/man/man1/brave-browser.1
++	if [[ -L usr/share/man/man1/brave-origin.1.gz ]]; then
++		rm usr/share/man/man1/brave-origin.1.gz || die
++		dosym ${MY_PN}.1 usr/share/man/man1/brave-origin.1
+ 	fi
+ 
+ 	mv usr/share/{appdata,metainfo}/ || die
+@@ -150,7 +150,7 @@
+ 		rm "${BRAVE_HOME}/libqt6_shim.so" || die
+ 	fi
+ 
+-	local suffix=${PN#*browser}
++	local suffix=${PN#brave-origin}
+ 	suffix=${suffix//-/_}
+ 
+ 	local size icon_installed=0
+@@ -163,8 +163,3 @@
+ 
+ 	pax-mark m "${BRAVE_HOME}/brave"
+ }
+-
+-pkg_postinst() {
+-	[[ ${ARCH} == "arm64" ]] && \
+-		ewarn "Note: arm64 support is experimental for this package and is not currently tested in CI."
+-}
