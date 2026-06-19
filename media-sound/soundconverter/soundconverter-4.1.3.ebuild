@@ -14,6 +14,10 @@ DESCRIPTION="A simple audiofile converter application for the GNOME environment"
 HOMEPAGE="https://soundconverter.org/"
 SRC_URI="https://github.com/kassoulet/${PN}/archive/${MY_PV}.tar.gz -> ${P}.gh.tar.gz"
 
+PATCHES=(
+	"${FILESDIR}"/"${PN}"-disable-theme-ops.patch
+)
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 ~arm64 x86"
