@@ -224,7 +224,10 @@ RUST_MIN_VER="1.92"
 inherit cargo gnome.org gnome2 meson xdg
 
 DESCRIPTION="Take pictures and videos"
-HOMEPAGE="https://apps.gnome.org/Snapshot"
+HOMEPAGE="
+	https://apps.gnome.org/Snapshot
+	https://gitlab.gnome.org/GNOME/snapshot
+"
 
 # SRC_URI for snapshot is set by gnome.org eclass.
 SRC_URI+=" ${CARGO_CRATE_URIS}"

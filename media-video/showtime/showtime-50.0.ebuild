@@ -9,7 +9,7 @@ inherit gnome.org gnome2-utils meson python-single-r1 xdg
 
 DESCRIPTION="A modern video player for GNOME"
 HOMEPAGE="
-	https://apps.gnome.org/Showtime/
+	https://apps.gnome.org/Showtime
 	https://gitlab.gnome.org/GNOME/showtime
 "
 
