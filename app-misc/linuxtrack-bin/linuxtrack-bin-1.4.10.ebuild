@@ -22,6 +22,8 @@ RDEPEND="
 
 src_unpack() {
 	unpack_deb "${A}"
+	rm -f "${S}/usr/lib/udev/rules.d/99-Mickey.rules"
+	sed -i -e "s#ATTRS{idProduct}[^\ ]*\ ##" "${S}/usr/lib/udev/rules.d/99-TIR.rules"
 }
 
 src_install() {
