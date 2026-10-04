@@ -28,7 +28,7 @@ IUSE="
 	+hyprland +screencopy
 	+X +i3
 	+tray +pipewire +mpris +pam +policykit +greetd +upower +notifications
-	+bluetooth +networkmanager +crash-handler
+	+bluetooth +networkmanager crash-handler
 	+dwl +niri
 "
 REQUIRED_USE="
