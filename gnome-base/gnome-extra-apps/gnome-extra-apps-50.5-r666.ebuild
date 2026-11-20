@@ -44,6 +44,9 @@ RDEPEND="
 	>=app-crypt/seahorse-47.0.1
 	>=net-misc/gnome-connections-49.0
 
+	>=gnome-extra/gnome-logs-50.0
+	>=sci-geosciences/gnome-maps-50.0
+
 	games? (
 		>=games-puzzle/five-or-more-48.1
 		>=games-board/four-in-a-row-3.38.1
