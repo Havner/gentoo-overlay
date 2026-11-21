@@ -1,0 +1,10 @@
+[Unit]
+Description=DisplayLink Manager
+StopWhenUnneeded=yes
+
+[Service]
+ExecStartPre=/sbin/modprobe evdi
+ExecStart=/opt/displaylink/DisplayLinkManager
+WorkingDirectory=/opt/displaylink
+Restart=always
+RestartSec=5

@@ -1,0 +1,2 @@
+ACTION!="remove", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="17e9", TAG+="systemd", ENV{SYSTEMD_WANTS}+="displaylink-driver.service"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="17e9", ATTR{port/usb3_lpm_permit}="0"
